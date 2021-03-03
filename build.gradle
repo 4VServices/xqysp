@@ -1,6 +1,12 @@
 plugins {
+  id "java"
   id "net.saliman.properties" version "1.5.1"
   id "com.marklogic.ml-gradle" version "4.1.1"
+  id("maven-publish")
+}
+
+configurations {
+	modules
 }
 
 repositories {
@@ -9,4 +15,37 @@ repositories {
 
 dependencies {
   mlBundle "com.marklogic:marklogic-unit-test-modules:1.0.0"
+}
+
+task modulesJar(type: Jar) {
+  description = "Jar up the xqysp MarkLogic modules into a package that can be published"
+  from("src/main/ml-modules") {
+    into("xqysp/ml-modules")
+  }
+  destinationDir file("build/libs")
+  baseName "xqysp"
+}
+
+// Define the artifacts, in addition to the jar registered by the "java" plugin
+artifacts {
+  modules modulesJar
+}
+
+publishing {
+  repositories {
+    maven {
+      name = "GitHubPackages"
+      url = uri("https://maven.pkg.github.com/4VServices/xqysp")
+      credentials {
+        username = "$gitUser"
+        password = "$gitToken"
+      }
+    }
+  }
+  publications {
+    mainModules(MavenPublication) {
+      artifactId "xqysp"
+      artifact modulesJar
+    }
+  }
 }
