@@ -1,6 +1,14 @@
 XQYSP
 ===
 
+XQYSP with ml-gradle
+---
+
+This repository is a fork of Michael Blakeley's XQYSP repo with a few modifications. 
+
+- Published as package for easy import. 
+- Graceful handling of poorly-formed query strings. 
+
 Yet another parser?
 ---
 
@@ -50,6 +58,28 @@ Patches are also welcome.
 
 The test cases use [XQUT](https://github.com/mblakele/xqut).
 If you find problems, please provide a test case.
+
+Installation
+---
+
+To make use of this project in an ml-gradle project, add the following to your build.gradle file. 
+
+```
+plugins {
+  id("io.github.0ffz.github-packages") version "1.2.0" // provides authentication for github packages
+}
+
+repositories {
+  maven githubPackage.invoke("4VServices/xqysp")
+}
+
+dependencies {
+  mlBundle "com.4VServices:xqysp:0.0.1"
+}
+
+```
+
+When you run `./gradlew mlLoadModules` or `./gradlew mlDeploy` in your project, the query parsing modules will be included. 
 
 License
 ---
